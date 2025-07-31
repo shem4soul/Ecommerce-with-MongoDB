@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 
 // Built-in body parser for form data
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
 
 
