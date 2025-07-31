@@ -1,7 +1,14 @@
 const express = require("express");
 const app = express();
 
-app.use();
+
+// Built-in body parser for JSON
+app.use(express.json());
+
+// Built-in body parser for form data
+app.use(express.urlencoded({ extended: true }));
+
+
 
 app.use('/add-product', (req, res, next) => {
    res.send('<form action="/product" method="POST"><input type="text" name="title"><button type="submit">Add Product</button></form>');
