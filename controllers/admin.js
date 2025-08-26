@@ -20,7 +20,6 @@ exports.postAddProduct = (req, res, next) => {
     imageUrl: imageUrl,
     description: description
   })
-  // Product.create()
   .then(result => {
     // console.log(result);
     console.log('Created Product');
