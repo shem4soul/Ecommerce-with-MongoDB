@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const Product = require("../models/product");
 
 exports.getAddProduct = (req, res, next) => {
@@ -36,7 +37,9 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-    Product.findByPk(prodId)
+  req.user
+     .getProducts({ where: {id: prodId}})
+    // Product.findByPk(prodId)
     .then((product) => {
       if (!product) {
         return res.redirect("/");
