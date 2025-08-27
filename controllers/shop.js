@@ -111,7 +111,7 @@ exports.postCartDeleteProduct = (req, res, next) => {
         return cart.getProducts({where: {id: prodId}});
       })
       .then(products => {
-            const product = product[0];
+            const product = products[0];
             return product.cartItem.destroy();
       })
       .then(result => {
