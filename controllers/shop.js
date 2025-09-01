@@ -127,7 +127,7 @@ exports.postOrder = (req, res, next) => {
     return cart.getProducts();
   }) 
   .then(products => {
-    console.log(products);
+    console.log(products); 
       })
       .catch(err => console.log(err));
 };
