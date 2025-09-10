@@ -8,7 +8,7 @@ const mongoConnect = callback => {
     MongoClient.connect(
       "mongodb+srv://smartresearchers82:church@nodejsexpressprojects.caj9s.mongodb.net/shop?retryWrites=true&w=majority&appName=NodejsExpressProjects"
     )
-      .then((result) => {
+      .then((client) => {
         console.log("Connected");
         _db = client.db();
         callback();
@@ -27,5 +27,8 @@ const getDb = () => {
    throw 'No database found!';
 }
 
-module.exports = mongoConnect;
-module.exports = getDb;
+
+module.exports = {
+  mongoConnect,
+  getDb,
+};
