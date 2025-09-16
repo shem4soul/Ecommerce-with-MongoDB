@@ -1,16 +1,16 @@
-const Sequelize = require('sequelize');
+const getDb = require('../utils/database').getDb;
 
-const sequelize = require('../utils/database');
 
-const User = sequelize.define('user', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    name: Sequelize.STRING,
-        email: Sequelize.STRING
-});
+class User {
+    constructor(username, email) {
+        this.name = username;
+        this.email = email;
+        }
+        save() {
+            const db = getDb();
+            return db.collection('users').insertOne(this);
+        }
+    static findById(userId) {}
+}
 
 module.exports = User;
