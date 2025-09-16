@@ -1,5 +1,7 @@
+const mongodb = require('mongodb');
 const getDb = require('../utils/database').getDb;
 
+const ObjectId = mongodb.ObjectId;
 
 class User {
     constructor(username, email) {
@@ -10,7 +12,11 @@ class User {
             const db = getDb();
             return db.collection('users').insertOne(this);
         }
-    static findById(userId) {}
+    static findById(userId) {
+     const db = getDb();
+     return db.collection('users').findOne({_id: new ObjectId(userId)})
+
+    }
 }
 
 module.exports = User;
