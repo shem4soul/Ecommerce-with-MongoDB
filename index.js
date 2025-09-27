@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config({ quiet: true });
 const path = require("path");
 
 const express = require("express");
@@ -15,8 +15,8 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-const adminRoutes = require("./routes/admin");
-const shopRoutes = require("./routes/shop");
+// const adminRoutes = require("./routes/admin");
+// const shopRoutes = require("./routes/shop");
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -31,8 +31,8 @@ app.use((req, res, next) => {
     .catch((err) => console.log(err));
 });
 
-app.use("/admin", adminRoutes);
-app.use(shopRoutes);
+// app.use("/admin", adminRoutes);
+// app.use(shopRoutes);
  
 app.use(errorController.get404);
 
@@ -41,17 +41,15 @@ const PORT = process.env.PORT || 6000;
 const MONGO_URI = process.env.MONGO_URI;
 
 // Connect to MongoDB
-mongoose.connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => {
+mongoose
+  .connect(MONGO_URI)
+  .then(() => {
     console.log("✅ MongoDB Connected");
-   
+
     app.listen(PORT, () => {
-        console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`🚀 Server running on port ${PORT}`);
     });
-})
-.catch((err) => {
+  })
+  .catch((err) => {
     console.error("❌ DB Connection Failed:", err.message);
-});
+  });
