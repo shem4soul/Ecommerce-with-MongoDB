@@ -22,4 +22,4 @@ const router = express.Router();
 
 // router.get("/orders", shopController.getOrders);
 
-// module.exports = router;
+module.exports = router;
