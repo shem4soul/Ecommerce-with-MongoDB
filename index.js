@@ -1,12 +1,15 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
 const path = require("path");
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const errorController = require("./controllers/error");
-const mongoConnect = require('./utils/database').mongoConnect;
-const User = require('./models/user');
+const mongoConnect = require("./utils/database").mongoConnect;
+const User = require("./models/user");
 
 const app = express();
 
@@ -16,12 +19,11 @@ app.set("views", "views");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  User.findById('68c9abd22d3b487d3f0cc3a0')
+  User.findById("68c9abd22d3b487d3f0cc3a0")
     .then((user) => {
       req.user = new User(user.name, user.email, user.cart, user._id);
       next();
@@ -31,9 +33,9 @@ app.use((req, res, next) => {
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
- 
+
 app.use(errorController.get404);
 
 mongoConnect(() => {
-    app.listen(3000);
-})
+  app.listen(3000);
+});
