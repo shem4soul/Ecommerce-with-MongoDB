@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 
 const errorController = require("./controllers/error");
 
-// const User = require('./models/user');
+const User = require('./models/user');
 
 const app = express();
 
@@ -22,14 +22,14 @@ const shopRoutes = require("./routes/shop");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// app.use((req, res, next) => {
-//   User.findById('68c9abd22d3b487d3f0cc3a0')
-//     .then((user) => {
-//       req.user = new User(user.name, user.email, user.cart, user._id);
-//       next();
-//     })
-//     .catch((err) => console.log(err));
-// });
+app.use((req, res, next) => {
+  User.findById("68d9359843b2c1c58a7d620c")
+    .then((user) => {
+      req.user = User;
+      next();
+    })
+    .catch((err) => console.log(err));
+});
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
@@ -44,6 +44,14 @@ const MONGO_URI = process.env.MONGO_URI;
 mongoose
   .connect(MONGO_URI)
   .then(() => {
+    const user = new User({
+      name: 'Shem',
+      email: 'shem4soul@gmail.com',
+      cart: {
+        items: []
+      }
+    })
+    user.save();
     console.log("✅ MongoDB Connected");
 
     app.listen(PORT, () => {
