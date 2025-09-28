@@ -44,14 +44,19 @@ const MONGO_URI = process.env.MONGO_URI;
 mongoose
   .connect(MONGO_URI)
   .then(() => {
-    const user = new User({
-      name: 'Shem',
-      email: 'shem4soul@gmail.com',
-      cart: {
-        items: []
+    User.findOne().then(user => {
+      if(!user) {
+        const user = new User({
+          name: "Shem",
+          email: "shem4soul@gmail.com",
+          cart: {
+            items: [],
+          },
+        });
+        user.save();
       }
     })
-    user.save();
+   
     console.log("✅ MongoDB Connected");
 
     app.listen(PORT, () => {
