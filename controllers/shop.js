@@ -81,8 +81,7 @@ exports.postCartDeleteProduct = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
-  let fetchedCart;
-  req.user
+   req.user
     .addOrder()
     .then((result) => {
       res.redirect("/orders");
