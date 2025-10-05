@@ -14,6 +14,20 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  req.session.isLoggedIn = true;
-    res.redirect('/');
+  UserActivation.findById("68d93ca53fdab82f4aeea625")
+    .then(user => {
+       req.session.isLoggedIn = true;
+       req.session.user = user;
+       res.redirect("/");
+    })
+    .catch(err => console.log(err));
+
+ 
 };
+
+exports.postLogout = (req, res, next) => {
+  req.session.destroy(err => {
+    console.log(err);
+    res.redirect('/');
+  })
+}
