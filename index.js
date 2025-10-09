@@ -67,20 +67,7 @@ const MONGO_URI = process.env.MONGO_URI;
 mongoose
   .connect(MONGO_URI)
   .then(() => {
-    User.findOne().then(user => {
-      if(!user) {
-        const user = new User({
-          name: "Shem",
-          email: "shem4soul@gmail.com",
-          cart: {
-            items: [],
-          },
-        });
-        user.save();
-      }
-    })
-   
-    console.log("✅ MongoDB Connected");
+   console.log("✅ MongoDB Connected");
 
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
