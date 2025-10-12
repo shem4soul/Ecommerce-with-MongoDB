@@ -54,9 +54,15 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  res.locals.isAuthenticated = false; // set true to simulate logged-in
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
   next();
 });
+
+// app.use((req, res, next) => {
+//   res.locals.isAuthenticated = false; // set true to simulate logged-in
+//   next();
+// });
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
