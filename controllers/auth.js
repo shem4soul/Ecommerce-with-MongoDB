@@ -162,45 +162,94 @@ exports.postLogout = (req, res, next) => {
 
 
 exports.getReset = (req, res, next) => {
-  res.render('auth/reset', {
-    path: '/reset',
-    pageTitle: 'Signup',
-    errorMessage: message
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render("auth/reset", {
+    path: "/reset",
+    pageTitle: "Reset Password",
+    errorMessage: message,
   });
 };
 
-
 exports.postReset = (req, res, next) => {
-  crypto.randomBytes(32, (err, buffer) => {
+  crypto.randomBytes(32, async (err, buffer) => {
     if (err) {
       console.log(err);
       return res.redirect("/reset");
     }
+
     const token = buffer.toString("hex");
-    User.findOne({ email: req.body.email })
-      .then((user) => {
-        if (!user) {
-          req.flash("error", "No account with that email found.");
-          return res.redirect("/reset");
-        }
-        user.resetToken = token;
-        user.resetTokenExpiration = Date.now() + 3600000;
-        return user.save();
-      })
-      .then((result) => {
-        res.redirect("/");
-        transporter.sendMail({
-          to: req.body.email,
-          from: "smartResearchers@node-complete.com",
-          subject: "Password reset",
-          html: `
-            <p>You requested a password reset</p>
-            <p>Click this <a href="http://localhost:5000/reset/${token}">link</a> to set a new password.</p>
-          `,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
+
+    try {
+      const user = await User.findOne({ email: req.body.email });
+
+      if (!user) {
+        req.flash("error", "No account with that email found.");
+        return res.redirect("/reset"); // ✅ exit early here
+      }
+
+      user.resetToken = token;
+      user.resetTokenExpiration = Date.now() + 3600000;
+      await user.save();
+
+      await transporter.sendMail({
+        to: req.body.email,
+        from: "smartResearchers@node-complete.com",
+        subject: "Password reset",
+        html: `
+          <p>You requested a password reset</p>
+          <p>Click this <a href="http://localhost:5000/reset/${token}">link</a> to set a new password.</p>
+        `,
       });
+
+      res.redirect("/");
+    } catch (error) {
+      console.error("Reset email error:", error);
+      if (!res.headersSent) {
+        // ✅ Prevent second response
+        res.redirect("/reset");
+      }
+    }
   });
 };
+
+
+
+// exports.postReset = (req, res, next) => {
+//   crypto.randomBytes(32, (err, buffer) => {
+//     if (err) {
+//       console.log(err);
+//       return res.redirect("/reset");
+//     }
+//     const token = buffer.toString("hex");
+//     User.findOne({ email: req.body.email })
+//       .then((user) => {
+//         if (!user) {
+//           req.flash("error", "No account with that email found.");
+//           return res.redirect("/reset");
+//         }
+//         user.resetToken = token;
+//         user.resetTokenExpiration = Date.now() + 3600000;
+//         return user.save();
+//       })
+//       .then((result) => {
+//         res.redirect("/");
+//         transporter.sendMail({
+//           to: req.body.email,
+//           from: "smartResearchers@node-complete.com",
+//           subject: "Password reset",
+//           html: `
+//             <p>You requested a password reset</p>
+//             <p>Click this <a href="http://localhost:5000/reset/${token}">link</a> to set a new password.</p>
+//           `,
+//         });
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//       });
+//   });
+// };
