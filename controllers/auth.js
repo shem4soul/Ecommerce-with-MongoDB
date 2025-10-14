@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 
 const User = require("../models/user");
+const transporter = require("../config/mailer");
 
 exports.getLogin = (req, res, next) => {
   let message = req.flash("error");
@@ -60,6 +61,61 @@ exports.postLogin = (req, res, next) => {
     })
     .catch((err) => console.log(err));
 };
+
+
+// exports.postSignup = (req, res, next) => {
+//   const email = req.body.email;
+//   const password = req.body.password;
+//   const confirmPassword = req.body.confirmPassword;
+
+//   User.findOne({ email: email })
+//     .then((userDoc) => {
+//       if (userDoc) {
+//         req.flash(
+//           "error",
+//           "E-Mail exists already, please pick a different one."
+//         );
+//         return res.redirect("/signup");
+//       }
+
+//       // Hash password and create user
+//       return bcrypt.hash(password, 12).then((hashedPassword) => {
+//         const user = new User({
+//           email: email,
+//           password: hashedPassword,
+//           cart: { items: [] },
+//         });
+//         return user.save();
+//       });
+//     })
+//     .then((result) => {
+//       if (!result) return; // Stop if no user was created
+
+//       // ✅ Send signup notification email here
+//       const mailOptions = {
+//         from: "smartresearcher82.com", // must be your verified Mailgun sender
+//         to: result.email,
+//         subject: "Welcome to Our Platform 🎉",
+//         text: `Hello ${result.email},\n\nThank you for signing up on our platform! We're excited to have you onboard.\n\nBest regards,\nThe Team.`,
+//       };
+
+//       transporter.sendMail(mailOptions, (error, info) => {
+//         if (error) {
+//           console.log("❌ Error sending signup email:", error);
+//         } else {
+//           console.log("✅ Signup email sent:", info);
+//         }
+//       });
+
+//       // Redirect after signup
+//       res.redirect("/login");
+//     })
+//     .catch((err) => {
+//       console.log("❌ Signup error:", err);
+//       res.redirect("/signup");
+//     });
+// };
+
 
 exports.postSignup = (req, res, next) => {
   const email = req.body.email;
