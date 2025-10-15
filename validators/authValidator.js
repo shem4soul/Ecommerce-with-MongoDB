@@ -1,13 +1,18 @@
 const { check, body } = require("express-validator");
+const User = require("../models/user"); // Make sure the path is correct
 
 exports.signupValidation = [
   check("email")
     .isEmail()
     .withMessage("Please enter a valid email address.")
     .normalizeEmail()
-    .custom((value) => {
-      if (value === "test@test.com") {
-        throw new Error("This email address is forbidden.");
+    .custom(async (value) => {
+      // Check if email already exists in the database
+      const userDoc = await User.findOne({ email: value });
+      if (userDoc) {
+        return Promise.reject(
+          "E-Mail exists already, please pick a different one."
+        );
       }
       return true;
     }),
@@ -36,6 +41,7 @@ exports.loginValidation = [
     .isEmail()
     .withMessage("Please enter a valid email.")
     .normalizeEmail(),
+
   body("password", "Invalid password.")
     .isLength({ min: 8 })
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/)
