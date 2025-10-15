@@ -1,6 +1,6 @@
 const express = require("express");
 const authController = require("../controllers/auth");
-// Import validation middlewares from separate file
+
 const {
   loginValidation,
   signupValidation,
