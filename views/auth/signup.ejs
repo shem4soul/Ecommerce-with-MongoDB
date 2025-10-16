@@ -10,37 +10,53 @@
         <% if (errorMessage) { %>
             <div class="user-message user-message--error"><%= errorMessage %></div>
         <% } %>
-        <form class="login-form" action="/signup" method="POST" novalidate>
-            <div class="form-control">
-                <label for="email">E-Mail</label>
-                <input 
-                class="<%= validationErrors.find(e => e.param === 'email') ? 'invalid' : '' %>"
-                type="email" 
-                name="email" 
-                id="email" 
-                value="<%= oldInput.email %>">
-            </div>
-            <div class="form-control"> 
-                <label for="password">Password</label>
-                <input 
-                class="<%= validationErrors.find(e => e.param === 'password') ? 'invalid' : '' %>"
-                type="password" 
-                name="password" 
-                id="password" 
-                value="<%= oldInput.password %>">
-            </div>
-            <div class="form-control">
-                <label for="confirmPassword">Confirm Password</label>
-                <input 
-                class="<%= validationErrors.find(e => e.param === 'confirmPassword') ? 'invalid' : '' %>"
+       <form class="login-form" action="/signup" method="POST" novalidate>
+  <% const emailError = validationErrors.find(e => e.path === 'email'); %>
+  <% const passwordError = validationErrors.find(e => e.path === 'password'); %>
+  <% const confirmError = validationErrors.find(e => e.path === 'confirmPassword'); %>
 
-                type="password"
-                name="confirmPassword" 
-                id="confirmPassword" 
-                value="<%= oldInput.confirmPassword %>">
-            </div>
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button class="btn" type="submit">Signup</button>
-        </form>
-    </main>
-<%- include('../includes/end.ejs') %>
+  <div class="form-control">
+    <label for="email">E-Mail</label>
+    <input
+      class="<%= emailError ? 'invalid' : '' %>"
+      type="email"
+      name="email"
+      id="email"
+      value="<%= oldInput.email %>"
+    >
+    <% if (emailError) { %>
+      <p class="error-text"><%= emailError.msg %></p>
+    <% } %>
+  </div>
+
+  <div class="form-control">
+    <label for="password">Password</label>
+    <input
+      class="<%= passwordError ? 'invalid' : '' %>"
+      type="password"
+      name="password"
+      id="password"
+      value="<%= oldInput.password %>"
+    >
+    <% if (passwordError) { %>
+      <p class="error-text"><%= passwordError.msg %></p>
+    <% } %>
+  </div>
+
+  <div class="form-control">
+    <label for="confirmPassword">Confirm Password</label>
+    <input
+      class="<%= confirmError ? 'invalid' : '' %>"
+      type="password"
+      name="confirmPassword"
+      id="confirmPassword"
+      value="<%= oldInput.confirmPassword %>"
+    >
+    <% if (confirmError) { %>
+      <p class="error-text"><%= confirmError.msg %></p>
+    <% } %>
+  </div>
+
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <button class="btn" type="submit">Signup</button>
+</form>
