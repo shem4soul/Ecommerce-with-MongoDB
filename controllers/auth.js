@@ -106,7 +106,11 @@ exports.postLogin = (req, res, next) => {
           res.redirect("/login");
         });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.postSignup = (req, res, next) => {
@@ -154,7 +158,9 @@ exports.postSignup = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
@@ -247,17 +253,13 @@ exports.postReset = (req, res, next) => {
       });
 
       res.redirect("/");
-    } catch (error) {
-      console.error("Reset email error:", error);
-      if (!res.headersSent) {
-        // ✅ Prevent second response
-        res.redirect("/reset");
-      }
+    } catch(err) {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     }
   });
 };
-
-
 
 // exports.postReset = (req, res, next) => {
 //   crypto.randomBytes(32, (err, buffer) => {
@@ -310,11 +312,13 @@ exports.getNewPassword = (req, res, next) => {
         pageTitle: "New Password",
         errorMessage: message,
         userId: user._id.toString(),
-        passwordToken: token
+        passwordToken: token,
       });
     })
     .catch((err) => {
-      console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
@@ -345,6 +349,8 @@ exports.postNewPassword = (req, res, next) => {
       res.redirect("/login");
     })
     .catch((err) => {
-      console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
