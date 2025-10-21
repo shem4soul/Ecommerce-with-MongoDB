@@ -28,6 +28,7 @@ app.set("views", "views");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
+const { error } = require('console');
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -79,6 +80,10 @@ app.use(authRoutes);
 app.get("/500", errorController.get500);
 app.use(errorController.get404);
 
+app.use((error, req, res, next) => {
+  //res.status(error.httpStatusCode).render(...);
+  res.redirect('/500');
+});
 
 const PORT = process.env.PORT || 6000;
 const MONGO_URI = process.env.MONGO_URI;
