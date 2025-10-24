@@ -197,18 +197,44 @@ exports.postDeleteProduct = (req, res, next) => {
   Product.findById(prodId)
     .then((product) => {
       if (!product) {
-        return next(new Error("Product not found."));
+        const error = new Error("Product not found.");
+        error.httpStatusCode = 404;
+        throw error; // stop execution here
       }
+
       fileHelper.deleteFile(product.imageUrl);
       return Product.deleteOne({ _id: prodId, userId: req.user._id });
     })
-    .then(() => {
+    .then((result) => {
       console.log("DESTROYED PRODUCT");
       res.redirect("/admin/products");
     })
     .catch((err) => {
+      console.error("Error while deleting product:", err);
       const error = new Error(err);
       error.httpStatusCode = 500;
       return next(error);
     });
 };
+
+
+// exports.postDeleteProduct = (req, res, next) => {
+//   const prodId = req.body.productId;
+//   Product.findById(prodId)
+//     .then((product) => {
+//       if (!product) {
+//         return next(new Error("Product not found."));
+//       }
+//       fileHelper.deleteFile(product.imageUrl);
+//       return Product.deleteOne({ _id: prodId, userId: req.user._id });
+//     })
+//     .then(() => {
+//       console.log("DESTROYED PRODUCT");
+//       res.redirect("/admin/products");
+//     })
+//     .catch((err) => {
+//       const error = new Error(err);
+//       error.httpStatusCode = 500;
+//       return next(error);
+//     });
+// };
