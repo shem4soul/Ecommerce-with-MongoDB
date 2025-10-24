@@ -28,6 +28,7 @@
     "mysql2": "^3.14.3",
     "nodemailer": "^7.0.9",
     "nodemailer-mailgun-transport": "^2.1.5",
+    "pdfkit": "^0.17.2",
     "pug": "^3.0.3",
     "sequelize": "^6.37.7"
   },
