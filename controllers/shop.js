@@ -141,8 +141,7 @@ exports.postCartDeleteProduct = (req, res, next) => {
 exports.getCheckout = (req, res, next) => {
   req.user
     .populate("cart.items.productId")
-    .execPopulate()
-    .then((user) => {
+     .then((user) => {
       const products = user.cart.items;
       let total = 0;
       products.forEach((p) => {
